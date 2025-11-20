@@ -33,6 +33,9 @@ Make sure your global npm bin folder is in your PATH to use `fdlt` from anywhere
 
 [Handle](https://learn.microsoft.com/de-de/sysinternals/downloads/handle) must be installed on Windows.
 
+## Info 
+
+I recommend starting the shell with admin rights on Windows, as it currently handle runs much faster there. 
 
 ## Usage
 
