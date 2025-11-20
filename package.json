@@ -1,0 +1,24 @@
+{
+  "name": "fdlt",
+  "version": "1.0.0",
+  "description": "Force delete files/directories by killing processes using them",
+  "bin": {
+    "fdlt": "./src/bin/fdlt.js"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "delete",
+    "force",
+    "remove",
+    "kill",
+    "process",
+    "locked"
+  ],
+  "author": "MaRcR11",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^29.0.0"
+  }
+}
