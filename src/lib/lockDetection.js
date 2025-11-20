@@ -10,13 +10,18 @@ function getProcessesUsingPath(targetPath) {
         encoding: "utf8",
       });
 
-      const pids = [];
-      const regex = /pid: (\d+)/gi;
+      const processes = [];
+      const regex = /^(\S+).*pid:\s*(\d+)/gim;
+
       let match;
       while ((match = regex.exec(output)) !== null) {
-        pids.push(parseInt(match[1]));
+        const name = match[1];
+        const pid = parseInt(match[2]);
+        processes.push({ pid, name });
       }
-      return [...new Set(pids)];
+
+
+      return processes;
     } catch (err) {
       return [];
     }
@@ -26,13 +31,16 @@ function getProcessesUsingPath(targetPath) {
         encoding: "utf8",
       });
       const lines = output.split("\n").slice(1);
-      const pids = [];
+      const processes = [];
+
       for (const line of lines) {
         const parts = line.trim().split(/\s+/);
-        if (parts[1] && !isNaN(parseInt(parts[1])))
-          pids.push(parseInt(parts[1]));
+        if (parts[1] && !isNaN(parseInt(parts[1]))) {
+          processes.push({ pid: parseInt(parts[1]), name: parts[0] });
+        }
       }
-      return [...new Set(pids)];
+
+      return processes;
     } catch {
       return [];
     }

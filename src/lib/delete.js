@@ -5,21 +5,40 @@ const { getProcessesUsingPath } = require("./lockDetection");
 
 const isWindows = process.platform === "win32";
 
-function killProcesses(pids) {
-  if (!pids.length) return;
+function killProcesses(processes) {
+  if (!processes.length) return;
 
-  for (const pid of pids) {
+  const uniqueProcesses = [...new Map(processes.map(p => [p.pid, p])).values()];
+
+  let restartExplorer = false;
+
+  for (const { pid, name } of uniqueProcesses) {
     try {
-      if (isWindows) execSync(`taskkill /F /PID ${pid}`, { stdio: "ignore" });
-      else execSync(`kill -9 ${pid}`, { stdio: "ignore" });
+      if (isWindows) {
+        execSync(`taskkill /F /PID ${pid}`, { stdio: "ignore" });
+        if (name.toLowerCase() === "explorer.exe") {
+          restartExplorer = true;
+        }
+      } else {
+        execSync(`kill -9 ${pid}`, { stdio: "ignore" });
+      }
     } catch (error) {
-      console.log(`Failed to kill process ${pid}: ${error.message}`);
+      console.log(`Failed to kill process ${pid} (${name}): ${error.message}`);
     }
   }
 
   const start = Date.now();
   while (Date.now() - start < 500) {}
+
+  if (isWindows && restartExplorer) {
+    try {
+      execSync("start explorer.exe", { stdio: "ignore" });
+    } catch (err) {
+      console.log(`Failed to restart explorer.exe: ${err.message}`);
+    }
+  }
 }
+
 
 function forceDeletePath(targetPath, recursive = false) {
   const absPath = path.resolve(targetPath);
@@ -36,9 +55,8 @@ function forceDeletePath(targetPath, recursive = false) {
     return false;
   }
 
-
-  const pids = getProcessesUsingPath(absPath);
-  killProcesses(pids);
+  const processes = getProcessesUsingPath(absPath);
+  killProcesses(processes);
 
   try {
     if (stats.isDirectory()) {
