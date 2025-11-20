@@ -45,7 +45,6 @@ describe("getProcessesUsingPath", () => {
 
     const pids = getProcessesUsingPath(testFile);
 
-    console.log(pids)
     expect(pids).toEqual([1234, 5678]);
   });
 
