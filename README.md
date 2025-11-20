@@ -29,7 +29,12 @@ Make sure your global npm bin folder is in your PATH to use `fdlt` from anywhere
 
 ---
 
-Usage
+## Prerequisites
+
+[Handle](https://learn.microsoft.com/de-de/sysinternals/downloads/handle) must be installed on Windows.
+
+
+## Usage
 
 ```text
 USAGE:
